@@ -2,20 +2,21 @@ package net.slipp.web;
 
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import net.slipp.domain.Answer;
 import net.slipp.domain.AnswerRepository;
 import net.slipp.domain.Question;
 import net.slipp.domain.User;
 
-@Controller
-@RequestMapping("/questions/{questionId}/answers")
-public class AnswerController {
+@RestController
+@RequestMapping("/api/questions/{questionId}/answers")
+public class ApiAnswerController {
 	
 	@Autowired
 	private QuestionRepository questionRepository;
@@ -24,15 +25,15 @@ public class AnswerController {
 	private AnswerRepository answerRepository;
 	
 	@PostMapping("")
-	public String cretate(@PathVariable Long questionId, String content, HttpSession session) {
+	public Answer cretate(@PathVariable Long questionId, String content, HttpSession session) {
 		if (!HttpSessionUtils.isLoginUser(session)) {
-			return "redirect:/users/loginForm";
+			return null;
 		}
 		User loginUser = HttpSessionUtils.getUserFromSession(session);
 		Question question = questionRepository.getOne(questionId);
 		Answer answer = new Answer(loginUser, question, content);
-		answerRepository.save(answer);
-		return String.format("redirect:/questions/%d", questionId);
+		System.out.println(answer);
+		return answerRepository.save(answer);
 	}
 	
 }

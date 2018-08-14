@@ -15,20 +15,28 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //this is required to avoid serializaiton related error.
 public class Question {
 	@Id
 	//strategy added to address org.h2.jdbc.JdbcSQLException: Unique index or primary key violation: "PRIMARY KEY ON PUBLIC.QUESTION(ID)";
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonProperty
 	private Long id;
 	
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+	@JsonProperty
 	private User writer;
 	
+	@JsonProperty
 	private String title;
 	
 	@Lob
+	@JsonProperty
 	private String content;
 	
 	private LocalDateTime createDate;
@@ -81,6 +89,12 @@ public class Question {
 
 	public List<Answer> getAnswers() {
 		return answers;
+	}
+
+	@Override
+	public String toString() {
+		return "Question [id=" + id + ", writer=" + writer + ", title=" + title + ", content=" + content
+				+ ", createDate=" + createDate + ", answers=" + answers + "]";
 	}
 	
 }

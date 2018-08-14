@@ -3,19 +3,32 @@ package net.slipp.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //this is required to avoid serializaiton related error.
 public class User {
 	@Id
-	@GeneratedValue
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonProperty
+	private Long id;	
 	
 	@Column(nullable=false, length=20, unique=true)
+	@JsonProperty
 	private String userId;
 	
 	private String password;
+	
+	@JsonProperty
 	private String name;
+
+	@JsonProperty
 	private String email;
 
 	public void setUserId(String userId) {
@@ -48,6 +61,7 @@ public class User {
 		return newId.equals(id);
 	}
 	
+	//can not remove these getters. if u do it so, all values are null.
 	public Long getId() {
 		return id;
 	}

@@ -6,26 +6,33 @@ import java.time.format.DateTimeFormatter;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 public class Answer {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonProperty
 	private Long id;
 	
 	@ManyToOne
+	@JsonProperty
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_writer"))
 	private User writer;
 	
 	@ManyToOne
+	@JsonProperty
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_question"))
 	private Question question;
 	
 	@Lob
+	@JsonProperty
 	private String content;
 	
 	private LocalDateTime createDate;
@@ -76,8 +83,8 @@ public class Answer {
 
 	@Override
 	public String toString() {
-		return "Answer [id=" + id + ", writer=" + writer + ", content=" + content + ", localDateTime=" + createDate
-				+ "]";
+		return "Answer [id=" + id + ", writer=" + writer + ", question=" + question + ", content=" + content
+				+ ", createDate=" + createDate + "]";
 	}
 	
 }
