@@ -6,10 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //this is required to avoid serializaiton related error.
@@ -30,6 +28,9 @@ public class User {
 
 	@JsonProperty
 	private String email;
+
+	public User() {
+	}
 
 	public void setUserId(String userId) {
 		this.userId = userId;
@@ -82,12 +83,6 @@ public class User {
 		this.password = updatedUser.password;
 		this.name = updatedUser.name;
 		this.email = updatedUser.email;
-	}
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", userId=" + userId + ", password=" + password + ", name=" + name + ", email="
-				+ email + "]";
 	}
 
 	@Override

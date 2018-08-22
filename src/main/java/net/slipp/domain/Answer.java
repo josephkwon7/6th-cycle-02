@@ -20,24 +20,24 @@ public class Answer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty
 	private Long id;
-	
+
 	@ManyToOne
 	@JsonProperty
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_writer"))
 	private User writer;
-	
+
 	@ManyToOne
 	@JsonProperty
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_question"))
 	private Question question;
-	
+
 	@Lob
 	@JsonProperty
 	private String content;
-	
+
 	private LocalDateTime createDate;
-	
-	//spring-boot requires this default constructor
+
+	// spring-boot requires this default constructor
 	public Answer() {
 	}
 
@@ -47,8 +47,9 @@ public class Answer {
 		this.content = content;
 		this.createDate = LocalDateTime.now();
 	}
-	
-	//this method is NOT necessary spring-boot 2.x handles it's format automatically
+
+	// this method is NOT necessary spring-boot 2.x handles it's format
+	// automatically
 	public String getFormattedCreateDate() {
 		if (createDate == null) {
 			return "";
@@ -81,10 +82,8 @@ public class Answer {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Answer [id=" + id + ", writer=" + writer + ", question=" + question + ", content=" + content
-				+ ", createDate=" + createDate + "]";
+	public boolean isSameWriter(User loginUser) {
+		return loginUser.equals(writer);
 	}
-	
+
 }

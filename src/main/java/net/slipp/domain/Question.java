@@ -19,33 +19,40 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //this is required to avoid serializaiton related error.
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" }) // this is required to avoid serializaiton related
+																	// error.
 public class Question {
 	@Id
-	//strategy added to address org.h2.jdbc.JdbcSQLException: Unique index or primary key violation: "PRIMARY KEY ON PUBLIC.QUESTION(ID)";
+	// strategy added to address org.h2.jdbc.JdbcSQLException: Unique index or
+	// primary key violation: "PRIMARY KEY ON PUBLIC.QUESTION(ID)";
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonProperty
 	private Long id;
-	
+
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
 	@JsonProperty
 	private User writer;
-	
+
 	@JsonProperty
 	private String title;
-	
+
 	@Lob
 	@JsonProperty
 	private String content;
+
+	@JsonProperty
+	private Integer countOfAnswer = 0;
 	
 	private LocalDateTime createDate;
-	
-	@OneToMany(mappedBy = "question")
-	@OrderBy("id ASC")
-	private List<Answer> answers;
-	
-	public Question() {} //JPA requires this default constructor
+
+	// Could not add below due to an error. ?
+//	@OneToMany(mappedBy = "question")
+//	@OrderBy("id ASC")
+//	private List<Answer> answers;
+
+	public Question() {
+	} // JPA requires this default constructor
 
 	public Question(User writer, String title, String content) {
 		this.writer = writer;
@@ -53,8 +60,9 @@ public class Question {
 		this.content = content;
 		this.createDate = LocalDateTime.now();
 	}
-	
-	//this method is NOT necessary spring-boot 2.x handles it's format automatically
+
+	// this method is NOT necessary spring-boot 2.x handles it's format
+	// automatically
 	public String getFormattedCreateDate() {
 		if (createDate == null) {
 			return "";
@@ -87,14 +95,41 @@ public class Question {
 		return content;
 	}
 
-	public List<Answer> getAnswers() {
-		return answers;
+//	public List<Answer> getAnswers() {
+//		return answers;
+//	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
 
 	@Override
-	public String toString() {
-		return "Question [id=" + id + ", writer=" + writer + ", title=" + title + ", content=" + content
-				+ ", createDate=" + createDate + ", answers=" + answers + "]";
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Question other = (Question) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	public void addAnswer() {
+		this.countOfAnswer += 1;
 	}
 	
+	public void deleteAnswer() {
+		this.countOfAnswer -= 1;
+	}
+
 }

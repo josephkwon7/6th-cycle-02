@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import net.slipp.domain.AnswerRepository;
 import net.slipp.domain.Question;
 import net.slipp.domain.Result;
 import net.slipp.domain.User;
@@ -22,6 +23,9 @@ public class QuestionController {
 	
 	@Autowired
 	private QuestionRepository questionRepository;
+	
+	@Autowired
+	private AnswerRepository answerRepoitory;
 	
 	@GetMapping("/form")
 	public String form(HttpSession session) {
@@ -45,6 +49,7 @@ public class QuestionController {
 	@GetMapping("/{id}")
 	public String show(@PathVariable Long id, Model model) {
 		model.addAttribute("question", questionRepository.getOne(id));
+		model.addAttribute("answers", answerRepoitory.findByQuestionId(id));
 		return "/qna/show";
 	}
 	

@@ -22,7 +22,7 @@ public class Result {
 		return valid;
 	}
 
-	public String getMessage() {
+	public String getErrorMessage() {
 		return errorMessage;
 	}
 }
