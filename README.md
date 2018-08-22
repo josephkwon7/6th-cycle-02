@@ -15,3 +15,25 @@ Lab projet for lecture Spring-Boot, JPA by JeSung Park
 ## 6-5. JSON API 추가 및 테스트
 
 ## 6-6. 쉘 스크립트를 활용해 배포 자동화
+
+deploy.sh
+#!/bin/bash
+echo "deploy.sh about to run!"
+TOMCAT_HOME=~/tomcat
+cd ~/6th-cycle-02
+git pull
+
+./mvnw clean package
+
+cd $TOMCAT_HOME/bin
+./shutdown.sh
+
+cd $TOMCAT_HOME/webapps
+rm -rf ./ROOT
+
+mv ~/6th-cycle-02/target/6th-cycle-02-1.0 $TOMCAT_HOME/webapps/ROOT
+
+cd $TOMCAT_HOME/bin
+./startup.sh
+
+tail -500f $TOMCAT_HOME/logs/catalina.out
